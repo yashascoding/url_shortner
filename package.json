@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "description": "this is a backend part of url shortner ",
   "main": "index.js",
-  "type":"module",
+  "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev":"nodemon index.js"
+    "dev": "nodemon index.js"
   },
   "author": "Yashas Bhagwat",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "nodemon": "^3.1.11"
   }

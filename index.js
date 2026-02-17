@@ -1,4 +1,6 @@
-import express from "express";//simple importing using module not common js
+import express from "express";
+import dotenv from "dotenv";
+dotenv.config();
 const app= express();//app object 
 
 const PORT =3000
@@ -14,4 +16,4 @@ app.get('/',(req,res)=>{
 app.listen(PORT,()=>{
     console.log("Server is runnig at port 3000")
 })
-// this listens to the port 3000
+
