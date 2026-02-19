@@ -1,5 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
+import pool from "./src/config/db.js";
+
 dotenv.config();
 const app= express();//app object 
 
@@ -11,9 +13,19 @@ app.use(express.urlencoded({extended:true}));//middlware converts urlencoded dat
 app.get('/',(req,res)=>{
     res.send("Hello world")
 })
-//this is a get request
 
 app.listen(PORT,()=>{
     console.log("Server is runnig at port 3000")
 })
 
+//database connection------------------------------------------
+pool.connect()
+.then(()=>{
+    console.log("Postgres sql connected succesfully");
+})
+.catch(
+    (err)=>{
+         console.log("Postgres sql not connected",err);
+    }
+);
+//-------------------------------------------------------------------
