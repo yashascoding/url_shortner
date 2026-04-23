@@ -1,31 +1,34 @@
 import express from "express";
 import dotenv from "dotenv";
 import pool from "./src/config/db.js";
+import authRoutes from "./src/routes/authRoutes.js";
+import urlRoutes from "./src/routes/urlRoutes.js";
 
 dotenv.config();
-const app= express();//app object 
+const app= express();
 
 const PORT =3000
 
-app.use(express.json());//middleware which is used to convert string data to json
-app.use(express.urlencoded({extended:true}));//middlware converts urlencoded data into json data 
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 
 app.get('/',(req,res)=>{
     res.send("Hello world")
 })
 
+app.use('/auth',authRoutes);
+app.use('/url',urlRoutes);
+
 app.listen(PORT,()=>{
-    console.log("Server is runnig at port 3000")
+    console.log(`Server is running at port ${PORT}`)
 })
 
-//database connection------------------------------------------
 pool.connect()
 .then(()=>{
-    console.log("Postgres sql connected succesfully");
+    console.log("Postgres sql connected successfully");
 })
 .catch(
     (err)=>{
          console.log("Postgres sql not connected",err);
     }
 );
-//-------------------------------------------------------------------
