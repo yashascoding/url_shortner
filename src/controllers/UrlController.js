@@ -1,18 +1,7 @@
 import {createUrl,getUrlsByUserId,deleteUrlById,incrementClickCount,findUrlByShortCode} from '../models/UrlModel.js';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-dotenv.config();
 
 const createShortUrl=async(req,res)=>{
     try{
-        const authHeader=req.headers.authorization;
-        if(!authHeader){
-            return res.status(401).json({error:"No token provided"});
-        }
-        const token=authHeader.split(' ')[1];
-        const decoded=jwt.verify(token,process.env.JWT_SECRET);
-        const userId=decoded.userId;
-        
         const {original_url,expiry_days}=req.body;
         if(!original_url){
             return res.status(400).json({error:"Original URL is required"});
@@ -24,7 +13,7 @@ const createShortUrl=async(req,res)=>{
             expiry_date.setDate(expiry_date.getDate()+expiry_days);
         }
         
-        const newUrl=await createUrl(original_url,userId,expiry_date);
+        const newUrl=await createUrl(original_url,req.userId,expiry_date);
         res.status(201).json({message:"URL created successfully",url:newUrl});
     }catch(error){
         res.status(500).json({error:error.message});
@@ -33,15 +22,7 @@ const createShortUrl=async(req,res)=>{
 
 const getUserUrls=async(req,res)=>{
     try{
-        const authHeader=req.headers.authorization;
-        if(!authHeader){
-            return res.status(401).json({error:"No token provided"});
-        }
-        const token=authHeader.split(' ')[1];
-        const decoded=jwt.verify(token,process.env.JWT_SECRET);
-        const userId=decoded.userId;
-        
-        const urls=await getUrlsByUserId(userId);
+        const urls=await getUrlsByUserId(req.userId);
         res.status(200).json({urls});
     }catch(error){
         res.status(500).json({error:error.message});
@@ -50,16 +31,8 @@ const getUserUrls=async(req,res)=>{
 
 const deleteUrl=async(req,res)=>{
     try{
-        const authHeader=req.headers.authorization;
-        if(!authHeader){
-            return res.status(401).json({error:"No token provided"});
-        }
-        const token=authHeader.split(' ')[1];
-        const decoded=jwt.verify(token,process.env.JWT_SECRET);
-        const userId=decoded.userId;
-        
         const {id}=req.params;
-        const deleted=await deleteUrlById(id,userId);
+        const deleted=await deleteUrlById(id,req.userId);
         if(!deleted){
             return res.status(404).json({error:"URL not found"});
         }
